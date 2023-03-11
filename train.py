@@ -1,17 +1,15 @@
-from argparse import Namespace
-
 import torch
 from transformers import get_linear_schedule_with_warmup
 
 from prompt_compression import prompt_compress_loss
-from hyperparameters import HyperParameters
+from hyperparameters import PromptHyperParameters
 
 
 def train_context_prompt(model,
                          prompt_embed,
                          dataloader,
-                         hp: HyperParameters,
-                         args: Namespace,
+                         hp: PromptHyperParameters,
+                         wandb_experiment=None,
                          device='cpu',
                          is_encoder_decoder=False):
 
@@ -40,6 +38,13 @@ def train_context_prompt(model,
             optimizer.zero_grad()
             gs += 1
 
+            # wandb log
+            log_items = {
+                "loss": loss.item(),
+                "LR": scheduler.get_last_lr()[0],
+            }
+            wandb_experiment.log(log_items)
+
             if gs >= hp.max_steps:
                 return prompt_embed
 
@@ -48,8 +53,7 @@ def train_context_prompt(model,
 
 def online_dialog_compress(model,
                            prompt_embed: torch.Tensor,
-                           hp: HyperParameters,
-                           args: Namespace,
+                           hp: PromptHyperParameters,
                            target_ids=None,
                            right_context_ids=None,
                            left_context_emb=None,
