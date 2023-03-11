@@ -17,6 +17,13 @@ def prompt_compress_loss(prompt_embed: torch.Tensor,
     """
     left_context_ids / target_ids / prompt_embed: should not have eos
     right_context_ids: should have eos
+
+    prompt_embed: the soft prompt to tune.
+    target_ids: the "target" text you want to compress into prompt.
+    left_context_ids: the context that comes before the "target".
+    left_context_emb: the embedding of left context. The left context might also
+        be some compressed prompts / tuned prompts / or just embeddings.
+    right_context_ids: the context that comes after the "target".
     """
 
     assert left_context_ids.shape[0] == right_context_ids.shape[0] == prompt_embed.shape[0]
