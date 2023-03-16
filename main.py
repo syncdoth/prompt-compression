@@ -29,7 +29,7 @@ def main(
     """
     For the arguments for hyperparameters, check the hyperparameters.py
     """
-    hp = PromptHyperParameters.from_dict(hyperparameters)
+    hp = PromptHyperParameters(**hyperparameters)
     set_random_seeds(seed)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     base_path = os.path.dirname(checkpoint_dir)
