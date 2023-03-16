@@ -12,8 +12,7 @@ def train_context_prompt(model,
                          wandb_experiment=None,
                          device='cpu',
                          is_encoder_decoder=False):
-
-    optimizer = torch.optim.Adam([prompt_embed], lr=hp.lr)
+    optimizer = torch.optim.AdamW([prompt_embed], lr=hp.lr, weight_decay=hp.weight_decay)
     num_training_steps = min(hp.epochs * len(dataloader), hp.max_steps)
     scheduler = get_linear_schedule_with_warmup(optimizer, hp.num_warmup_steps, num_training_steps)
 
@@ -59,7 +58,7 @@ def online_dialog_compress(model,
                            left_context_emb=None,
                            device: str = 'cpu',
                            is_encoder_decoder: bool = False):
-    optimizer = torch.optim.Adam([prompt_embed], lr=hp.lr)
+    optimizer = torch.optim.Adam([prompt_embed], lr=hp.lr, weight_decay=hp.weight_decay)
     scheduler = get_linear_schedule_with_warmup(optimizer, hp.num_warmup_steps, hp.max_steps)
 
     for step in range(hp.max_steps):
