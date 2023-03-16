@@ -7,10 +7,8 @@ def load_transformer_LM_tokenizer(model_name_or_path):
     tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
     if 't5' in model_name_or_path or 't0' in model_name_or_path:
         model = AutoModelForSeq2SeqLM.from_pretrained(model_name_or_path)
-        is_encoder_decoder = True
     else:
         model = AutoModelForCausalLM.from_pretrained(model_name_or_path)
-        is_encoder_decoder = False
         # open-ended generation
         tokenizer.pad_token = tokenizer.eos_token
         model.config.pad_token_id = model.config.eos_token_id
